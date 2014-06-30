@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Hi, {{user.nickname}}!</h1>  <body>
+       <br>
+       <h2>Recent Activity</h2>
+       <br>
+        <p>Applicant ---------- Feedback</p>
+       {% for activity in activity %}
+        <p>{{activity.applicant.name}} ---- <b>{{activity.applicant.Feedback_Provided}}</b></p>
+        {% endfor %}
+{% endblock %}
