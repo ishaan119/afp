@@ -5,7 +5,8 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import app, db, lm, oid
 from models import User, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
-
+#from app import babel
+from config import LANGUAGES
 
 @app.route('/')
 @app.route('/index')
@@ -93,7 +94,7 @@ def user(nickname):
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
-    form = EditForm()
+    form = EditForm(g.user.nickname)
     if form.validate_on_submit():
         g.user.nickname = form.nickname.data
         g.user.work_title = form.work_title.data
@@ -106,3 +107,20 @@ def edit():
         form.work_title.data = g.user.work_title
     return render_template('edit.html',
         form = form)
+
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
+
+'''
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())
+'''
